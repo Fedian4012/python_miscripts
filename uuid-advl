@@ -1,0 +1,361 @@
+#!/bin/bash
+
+getscript() {
+  scriptok=`ps aux | grep -i $1 | grep -v "grep" | wc -l`
+}
+
+if [ `whoami` != root ]; then
+		[ ! -d  /home/ADVLinux/ADVL-UPDATE/Env/ ] && mkdir /home/ADVLinux/ADVL-UPDATE/Env/
+		echo $HOME > /home/ADVLinux/ADVL-UPDATE/Env/home.conf
+fi
+
+home=$(cat /home/ADVLinux/ADVL-UPDATE/Env/home.conf)
+
+printf "\033c"
+echo "====================================="
+echo "     Manipulation UUID pour ADVL     "
+echo "====================================="
+
+echo ""
+echo -e "S'il vous est demandé AVANT la fin de ce script de redémarrer l'ordinateur,\nne le faites surtout pas SVP !"
+echo ""
+echo -e "Votre mot de passe pourra être demandé !"
+echo ""
+read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+echo ""
+
+if [ `whoami` != root ]; then
+ echo -e "Le script doit être exécuté en mode super-utilisateur !\nVeuillez recommencer S.V.P !"
+ exit 0
+fi
+
+printf "\033c"
+
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+echo "------------------------------------------------------"
+echo "                        ETAPE 1                       "
+echo "     Installation si nécessaire du paquet 'hexedit'   "
+echo "               et du paquet 'uuid-runtime'            "
+echo "------------------------------------------------------"
+
+echo ""
+echo -e "S'il vous est demandé de redémarrer l'ordinateur,\nne le faites surtout pas SVP !"
+echo ""
+
+read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+echo ""
+
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+export LC_ALL=C
+
+if [ -z "$(apt-cache policy hexedit|grep Installed|grep -v none)" ];then
+	echo -e "Le Paquet 'hexedit' n'est pas installé.\n\n "
+	while true; do
+    		read -p "Souhaitez-vous l'installer O (Oui)/N (Non) ?" on
+    		case $on in
+        		[Oo]* ) sudo apt-get install hexedit||(echo "Erreur dans l'installation de hexedit. Impossible de continuer.";exit 0) ; break;;
+        		[Nn]* ) echo "Ce paquet étant nécessaire. Impossible de continuer"; exit 0;;
+        		* ) printf "\033c"; echo "S'il vous plait, veuillez répondre par O (Oui)/N (Non).";;
+    		esac
+	done
+fi
+if [ -z "$(apt-cache policy uuid-runtime|grep Installed|grep -v none)" ];then
+	echo -e "Le Paquet 'uuid-runtime' n'est pas installé.\n\n "
+	while true; do
+    		read -p "Souhaitez-vous l'installer O (Oui)/N (Non) ?" on
+    		case $on in
+        		[Oo]* ) sudo apt-get install uuid-runtime||(echo "Erreur dans l'installation de uuid-runtime. Impossible de continuer.";exit 0) ; break;;
+        		[Nn]* ) echo "Ce paquet étant nécessaire. Impossible de continuer"; exit 0;;
+        		* ) printf "\033c"; echo "S'il vous plait, veuillez répondre par O (Oui)/N (Non).";;
+    		esac
+	done
+fi
+
+printf "\033c"
+
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+echo "------------------------------------------------------"
+echo "                        ETAPE 2                       "
+echo "     Modification de l'UUID d'une partition donnée    "
+echo "------------------------------------------------------"
+
+echo ""
+echo -e "S'il vous est demandé de redémarrer l'ordinateur,\nne le faites surtout pas SVP !"
+echo ""
+
+read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+echo ""
+starttime=$(date +%Y-%m-%d_%k:%M|tr -d " ")
+
+printf "\033c"
+
+echo "Début : "$starttime.
+echo ""
+
+sudo blkid
+echo "------------------------------------------------------------------------"
+echo ""
+
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+read -p "Tapez l'identifiant de la partition dont vous voulez modifier l'UUID (par exemple, sda1)" a
+if [ ! -e /dev/$a ];then
+	echo "/dev/$a n'existe pas. Impossible de continuer!"
+	exit 0
+fi
+
+filesystem=$(sudo blkid /dev/$a -o value -s TYPE)
+
+echo ""
+echo "Le système de fichier de la partition : /dev/$a est $filesystem"
+echo ""
+
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+littleendian () {
+	if [ $(expr $(echo $check1|wc -c) % 2) = 0 ];then
+		echo ""
+		echo "nombre de mot \"$check1\" est odd. Impossible de continuer."
+  		exit 0
+ 	else
+  		repeatnum=$(expr $(expr $(echo $check1|wc -c) - 1) / 2 - 1)
+  		len=$(expr $(echo $check1|wc -c) - 1)
+  		while [ 0 -lt $repeatnum ];do
+   			check1="$(echo $check1|cut -c3-$(expr $(expr $repeatnum \* 2) + 2))$(echo $check1|cut -c1-2)$(if [ $(expr $(expr $repeatnum + 1) \* 2) -lt $len ];then echo $check1|cut -c$(expr $(expr $repeatnum \* 2) + 3)-;fi)"
+   			repeatnum=$(expr $repeatnum - 1)
+  		done
+ 	fi
+}
+				read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+				echo ""
+    				sync
+    				newuuid=$(echo $check1|cut -c1-$(echo $cutspace|cut -d " " -f1))
+    				loc1=$(echo $cutspace|cut -d " " -f1)
+    				cutspace=$(echo "$cutspace"|cut -d " " -f2-)
+    				for loc2 in $cutspace;do
+     					newuuid=$newuuid$(echo -$(echo $check1|cut -c$(expr $loc1 + 1)-$loc2))
+     					loc1=$loc2
+    				done
+    				changefstabetal
+   			else
+    				echo ""
+    				echo "Terminé !"
+    				exit 0
+   			fi
+ 		else
+   			echo ""
+   			echo "Terminé !"
+   			exit 0
+  		fi
+ 	else
+  		echo ""
+  		echo "Terminé !"
+  	exit 0
+ 	fi
+}
+
+modifyfile () { 
+	if [ -e /mnt$file ];then
+		if [ $filesystem = "ntfs" -o $filesystem = "vfat" ];then
+			olduuid=$(echo $olduuid|tr "[a-z]" "[A-Z]")
+   			newuuid=$(echo $newuuid|tr "[a-z]" "[A-Z]")
+  		fi
+  		if [ "$(grep $olduuid /mnt/$file|grep -v ^#)" ];then
+   			for line in $(grep -n $olduuid /mnt$file|grep -v ^[0-9]*:#|tr "\t " "_");do
+    			answer="1"
+    				while :;do
+    					#echo ""
+     					#echo "Il y a la ligne suivante dans $file dans $aa :"
+     					#echo $(echo $line|sed -e "s/^[0-9]*/& lines:/")
+     					#echo "Souhaitez-vous remplacer \"$olduuid\" par \"$newuuid\" ?(Oui=o, Non=n)"
+     					#read answer
+     					#if [ "$answer" = "o" ] || [ "$answer" = "O" ];then
+      						perm=$(ls -l /mnt$file|cut -c2-10)
+      						perm2=$(expr 0 $(echo $perm|cut -c1-3|sed -e "s/r/ + 4/" -e "s/w/ + 2/" -e "s/x/ + 1/" -e "s/-//g"))$(expr 0 $(echo $perm|cut -c4-6|sed -e "s/r/ + 4/" -e "s/w/ + 2/" -e "s/x/ + 1/" -e "s/-//g"))$(expr 0 $(echo $perm|cut -c7-9|sed -e "s/r/ + 4/" -e "s/w/ + 2/" -e "s/x/ + 1/" -e "s/-//g"))
+      						sudo cp -f /mnt$file /tmp/tempfile${starttime}
+      						sudo mv -n /mnt$file /mnt${file}${starttime}
+      						sudo touch /mnt$file
+      						sudo chmod a+w /mnt$file
+      						cat /tmp/tempfile${starttime}|sed "$(echo $line|cut -d: -f1)s/$olduuid/$newuuid/" | sudo tee /mnt$file
+      						sudo chmod $perm2 /mnt$file
+      					break
+     					#elif [ "$answer" = "n" ] || [ "$answer" = "N" ];then break
+     					#fi     
+    				done
+   			done
+  		fi
+ 	fi
+}
+
+changefstabetal () {
+
+		printf "\033c"
+
+		echo "------------------------------------------------------"
+		echo "                        ETAPE 3                       "
+		echo "      Modification de fichiers associés à l'UUID      "
+		echo "------------------------------------------------------"
+
+		echo ""
+		echo -e "Les fichiers suivants associés à l'UUID seront modifiés si nécessaires :\n\n"
+		echo "/etc/fstab, 
+/boot/grub/grub.cfg, 
+/etc/grub.d/40_custom, 
+/etc/initramfs-tools/conf.d/resume"
+		echo ""
+
+		read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+		echo ""
+ 	deviceslist=$(sudo blkid /dev/$a|cut -d: -f1)
+ 	aa=$deviceslist
+  		sudo umount $deviceslist 2>/dev/null
+  		filesystem1=$(sudo blkid $deviceslist -o value -s TYPE)
+  		mountpoint1=""
+  		if [ $filesystem1 = "ntfs" ];then
+   			if [ "$(sudo mount|grep $deviceslist' ')" ];then
+    				echo "$deviceslist va tenter d'être démontée"
+    				mountpoint1=$(sudo mount|grep "$deviceslist "|head -n1|tr -s " "|cut -d" " -f3)
+    				sudo umount $deviceslist 2>/dev/null
+   			fi
+  		fi
+  		sudo mount -t $filesystem1 $deviceslist /mnt -o rw 2>/dev/null
+  		printf "\033c"
+  		echo ""
+  		echo "Vérification de $deviceslist"
+  		file="/etc/fstab"
+  		modifyfile
+  		printf "\033c"
+  		echo ""
+  		echo "Modification éventuelle du fichier 'fstab' effectué !"
+  		echo ""
+  		read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+  		printf "\033c"
+  		file="/boot/grub/grub.cfg"
+  		modifyfile
+  		printf "\033c"
+  		echo ""
+  		echo "Modification éventuelle du fichier 'grub.cfg' effectué !"
+  		echo ""
+  		read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+  		printf "\033c"  		
+  		file="/etc/grub.d/40_custom"
+  		modifyfile
+  		printf "\033c"
+  		echo ""
+  		echo "Modification éventuelle du fichier '40_custom' effectué !"
+  		echo ""
+  		read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+  		printf "\033c"  		
+  		file="/boot/grub/menu.lst"
+  		modifyfile
+  		printf "\033c"
+   		echo ""
+  		echo "Modification éventuelle du fichier 'menu.lst' effectué !"
+  		echo ""
+  		read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+  		printf "\033c"
+  		file="/etc/initramfs-tools/conf.d/resume"
+  		modifyfile
+  		printf "\033c"
+   		echo ""
+  		echo "Modification éventuelle du fichier 'resume' effectué !"
+  		echo ""
+  		read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+  		printf "\033c"
+  		sync
+  		sudo umount $deviceslist 2>/dev/null
+  		sync
+  		if [ "$mountpoint1" ];then mount -t ntfs $deviceslist $mountpoint1;fi
+}
+
+case $filesystem in
+ ext2|ext3|ext4)
+  	olduuid=$(sudo blkid /dev/$a  -o value -s UUID)
+  	echo ""
+  	echo "L'UUID actuel est : $olduuid"
+  	newuuid=`uuidgen`
+   	echo "------------------------------------------------------------------------"
+	echo ""
+	while true; do
+  		read -p "Souhaitez-vous changer l'UUID de /dev/$a pour ${newuuid} - O (Oui)/N (Non) ?" on
+  		case $on in
+        		[Oo]* ) b=$on ; break;;
+        		[Nn]* ) echo ""; echo "Aucune modification effectuée. Terminé !"; exit 0;;
+        		* ) printf "\033c"; echo "S'il vous plait, veuillez répondre par O (Oui)/N (Non).";;
+    		esac
+	done
+  	if [ $b = "o" ] || [ $b = "O" ] ; then
+  		deviceslist=$(sudo blkid /dev/$a|cut -d: -f1)
+  		sudo umount $deviceslist 2>/dev/null
+   		sudo tune2fs -U $newuuid /dev/$a && printf "\033c" && echo -e "\n\nL'UUID a été modifié.\n\nLa commande \"blkid\" retourne :
+$(sudo blkid /dev/$a)\n\n
+Vous devrez peut-être mettre à jour (modifier) manuellement les paramètres Système\n\ntels que /etc/fstab, /boot/grub/grub.cfg, /etc/initramfs-tools/conf.d/resume, etc.\n\n
+Je vais vérifier et tenter de modifier /etc/fstab, /boot/grub/grub.cfg, /etc/grub.d/40_custom, /etc/initramfs-tools/conf.d/resume pour $olduuid."
+
+		echo ""
+
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
+		read -rsp $'Frappez  une touche pour continuer...\n' -n1 ke
+		echo ""
+
+   		sync
+   		changefstabetal
+   		echo ""
+   		echo "Modifications terminées !"
+   		exit 0
+  		else
+   		echo "Aucune modification effectuée. Terminé !"
+   		exit 0
+  	fi
+ ;;
+ swap)
+  num=16
+  skip=1036
+  littleendian="off"
+  cutspace="8 12 16 20 32"
+  modify
+ ;;
+ ntfs)
+  num=8
+  skip=72
+  littleendian="on"
+  cutspace="16 "
+  modify
+ ;;
+ reiserfs)
+  num=16
+  skip=65620
+  littleendian="off"
+  cutspace="8 12 16 20 32"
+  modify
+ ;;
+ btrfs)
+  num=16
+  skip=65568
+  littleendian="off"
+  cutspace="8 12 16 20 32"
+  modify
+ ;;
+ vfat)
+  littleendian="on"
+  cutspace="4 8"
+  if [ -n "$(blkid /dev/$a|grep msdos)" ];then
+   num=4
+   skip=39
+  else
+   num=4
+   skip=67
+  fi
+  modify
+ ;;
+ *)
+  echo ""
+  echo "Le type de système de fichiers $filesystem n'est pas supporté. Terminé !"
+  exit 0
+ ;;
+esac
+exit 0
