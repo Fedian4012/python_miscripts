@@ -50,14 +50,16 @@ sleep 2
 ################################
 
 # On vérifie si on est bien sous X11
-$session_type=$(echo $XDG_SESSION_TYPE)
+session_type=$(echo $XDG_SESSION_TYPE)
+
+
 if [[ "$session_type" = "wayland" ]]
 then
     echo "Vous n'êtes pas sous Xorg. Il est impossible de continuer. Veuillez vous déconnecter, vous reconnecter sous Xorg et relancer le script."
     exit 1
 fi
-# On vérifie la présence de gedit et xdotool, et on installe ce qui manque
 
+# On vérifie la présence de gedit et xdotool, et on installe ce qui manque
 check_package gedit
 check_package xdotool
 
