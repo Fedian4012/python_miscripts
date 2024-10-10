@@ -17,10 +17,10 @@ check_package()
 install_package()
 {
 read -p "Le paquet ""$package_name"" n'est pas installé. Voulez-vous l'installer (O/n) ? " answer
-	if [ "$answer" = [[Oo*]]
+	if [[ "$answer" = [[Oo*]] ]]
 		then
 		sudo apt-get install -y "$package_name"
-	elif [[ "$answer" = [[Nn*]]
+	elif [[ "$answer" = [[Nn*]] ]]
 		then
 		echo "Ce paquet étant nécessaire, il est impossible de continuer."
 		exit 0
@@ -51,7 +51,7 @@ sleep 2
 
 # On vérifie si on est bien sous X11
 $session_type=$(echo $XDG_SESSION_TYPE)
-if [[[[ "$session_type" = "wayland" ]]
+if [[ "$session_type" = "wayland" ]]
 then
     echo "Vous n'êtes pas sous Xorg. Il est impossible de continuer. Veuillez vous déconnecter, vous reconnecter sous Xorg et relancer le script."
     exit 1
