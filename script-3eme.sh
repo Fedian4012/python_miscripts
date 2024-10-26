@@ -2,9 +2,6 @@
 
 # Fait sur (et pour) Debian 12 "Bookworm" avec l'aide de mon père et mon grand-père pour des bouts de code
 
-
-# packages_log="/tmp/packages_install.log"
-
 ################################
 #        Fonctions             #
 ################################
@@ -92,27 +89,3 @@ write_things "Vous pouvez me contacter à l'adresse francois.ruau@free.fr."
 write_things "J'ai aussi un GitHub à l'adresse https://github.com/FrancoisFedian/francois_repo"
 xdotool key Control_L+S
 killall mousepad
-
-# On désinstalle les paquets installés par le script
-
-if [[ "$(cat "/tmp/packages_install.log")" != "" ]]
-then
-    exit 0
-else
-    read -p "Voulez-vous désinstaller les paquets installés par le script ?" answer2
-	if [[ "$answer2" = [Oo*] ]]
-		then
-		    sudo apt-get remove -y $(cat /tmp/packages_install.log)
-	elif [[ "$answer2" = [Nn*] ]]
-		then
-		echo ""
-		exit 0
-	elif [[ "$answer2" = "" ]]
-		then
-		    sudo apt-get remove -y $(cat /tmp/packages_install.log")
-	else
-		echo "Veuillez répondre par oui ou non"
-		sudo apt-get remove -y $(cat /tmp/packages_install.log)
-	fi
-fi
-
