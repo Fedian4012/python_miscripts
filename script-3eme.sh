@@ -9,7 +9,7 @@
 check_package()
 {
 	package_name=$1
-	if [ "$(dpkg -l | grep "$package_name" )" = "" ]
+	if [[ "$(dpkg -l | grep "$package_name" )" = "" ]]
 		then
 		install_package "$package_name"
 	fi
@@ -20,11 +20,18 @@ install_package()
    
     
 read -p "Le paquet ""$package_name"" n'est pas installé. Voulez-vous l'installer (O/n) ? " answer
+<<<<<<< HEAD:Script stage 3ème/script-3eme.sh
+	if [[ "$answer" = [[Oo*]] ]]
+		then
+		sudo apt-get install -y "$package_name"
+	elif [[ "$answer" = [[Nn*]] ]]
+=======
 	if [[ "$answer" = [Oo*] ]]
 		then
 		    sudo apt-get install -y "$package_name"
 		    echo "$package_name " >> "/tmp/packages_install.log"
 	elif [[ "$answer" = [Nn*] ]]
+>>>>>>> main:script-3eme.sh
 		then
 		echo "Ce paquet étant nécessaire, il est impossible de continuer."
 		exit 0
@@ -64,8 +71,31 @@ fi
 #       Début du script        #                                                #     
 ################################
 
-# On vérifie la présence de gedit et xdotool, et on installe ce qui manque
+# On vérifie si on est bien sous X11
+session_type=$(echo $XDG_SESSION_TYPE)
 
+<<<<<<< HEAD:Script stage 3ème/script-3eme.sh
+
+if [[ "$session_type" = "wayland" ]]
+then
+    echo "Vous n'êtes pas sous Xorg. Il est impossible de continuer. Veuillez vous déconnecter, vous reconnecter sous Xorg et relancer le script."
+    exit 1
+fi
+
+# On vérifie la présence de gedit et xdotool, et on installe ce qui manque
+check_package gedit
+check_package xdotool
+
+# On vérifie si le fichier cible existe déjà, et si c'est le cas, on le supprime
+if [[ -f /tmp/stage-fr ]]
+   then
+       rm -f /tmp/stage-fr
+fi
+   
+# On ouvre mousepad, on tape le texte qui va bien puis on sauvegarde
+echo "Le fichier créé par ce script se trouvera dans /tmp/stage-fr." & sleep 5
+mousepad /tmp/stage-fr & sleep 2
+=======
 check_package mousepad
 check_package xdotool
 
@@ -77,6 +107,7 @@ remove_created_files /tmp/packages_install.log
 # On ouvre gedit, on tape le texte qui va bien puis on sauvegarde
 echo "Le fichier créé par ce script se trouvera dans /tmp/stage-fr.txt." & sleep 5
 mousepad /tmp/stage-fr.txt & sleep 2
+>>>>>>> main:script-3eme.sh
 write_things "Je m'appelle François Ruau,"
 write_things "je suis né le 15/04/2011 à Nantes,"
 write_things "et j'habite à Riaillé."
