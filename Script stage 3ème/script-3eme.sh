@@ -20,18 +20,10 @@ install_package()
    
     
 read -p "Le paquet ""$package_name"" n'est pas installé. Voulez-vous l'installer (O/n) ? " answer
-<<<<<<< HEAD:Script stage 3ème/script-3eme.sh
-	if [[ "$answer" = [[Oo*]] ]]
-		then
-		sudo apt-get install -y "$package_name"
-	elif [[ "$answer" = [[Nn*]] ]]
-=======
 	if [[ "$answer" = [Oo*] ]]
 		then
-		    sudo apt-get install -y "$package_name"
-		    echo "$package_name " >> "/tmp/packages_install.log"
+		sudo apt-get install -y "$package_name"
 	elif [[ "$answer" = [Nn*] ]]
->>>>>>> main:script-3eme.sh
 		then
 		echo "Ce paquet étant nécessaire, il est impossible de continuer."
 		exit 0
@@ -74,7 +66,6 @@ fi
 # On vérifie si on est bien sous X11
 session_type=$(echo $XDG_SESSION_TYPE)
 
-<<<<<<< HEAD:Script stage 3ème/script-3eme.sh
 
 if [[ "$session_type" = "wayland" ]]
 then
@@ -95,19 +86,6 @@ fi
 # On ouvre mousepad, on tape le texte qui va bien puis on sauvegarde
 echo "Le fichier créé par ce script se trouvera dans /tmp/stage-fr." & sleep 5
 mousepad /tmp/stage-fr & sleep 2
-=======
-check_package mousepad
-check_package xdotool
-
-# On supprime les fichiers créés précédemment s'ils sont là
-remove_created_files /tmp/stage-fr
-remove_created_files /tmp/packages_install.log
-
-   
-# On ouvre gedit, on tape le texte qui va bien puis on sauvegarde
-echo "Le fichier créé par ce script se trouvera dans /tmp/stage-fr.txt." & sleep 5
-mousepad /tmp/stage-fr.txt & sleep 2
->>>>>>> main:script-3eme.sh
 write_things "Je m'appelle François Ruau,"
 write_things "je suis né le 15/04/2011 à Nantes,"
 write_things "et j'habite à Riaillé."
