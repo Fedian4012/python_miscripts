@@ -30,7 +30,6 @@ read -p "Le paquet ""$package_name"" n'est pas installé. Voulez-vous l'installe
 	elif [[ "$answer" = "" ]]
 		then
 		    sudo apt-get install -y "$package_name"
-		     echo "$package_name " >> "/tmp/packages_install.log"
 	else
 		echo "Veuillez répondre par oui ou non"
 		install_package "$package_name"
