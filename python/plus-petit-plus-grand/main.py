@@ -1,10 +1,11 @@
 import random
+from colorama import Fore
 
 mini = 1
 maxi = 100
 
 while True:
-    print(f"J'ai choisi un nombre entre {mini} et {maxi}. Sauras-tu le retrouver ?")
+    print(Fore.CYAN + f"J'ai choisi un nombre entre {mini} et {maxi}. Sauras-tu le retrouver ?")
     number = random.randint(mini, maxi)
     attempts = 0
 
