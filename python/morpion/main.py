@@ -56,7 +56,7 @@ while True:
     while True:
         clear_screen()
         print_grid(grid)
-        written_case = input(f"Joueur {player}, dans quelle case voulez-vous jouer ? ")
+        written_case = input(f"Joueur {player}, dans quelle case voulez-vous jouer ? ").upper()
 
         if not verify_cell(written_case):
             print("Erreur : case invalide")
