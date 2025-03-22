@@ -1,0 +1,34 @@
+1.Initialisation
+
+    Créer une grille vide sous forme de dictionnaire.
+
+    Définir quel joueur commence ("X").
+
+2.Boucle du jeu (tant que personne n'a gagné et qu'il reste des cases vides)
+
+    Afficher la grille.
+
+    Demander au joueur actuel de choisir une case.
+
+    Vérifier si la case est valide et vide.
+
+        Si ce n'est pas le cas, redemander un coup valide.
+
+    Placer le symbole du joueur dans la case choisie.
+
+    Vérifier si le joueur actuel a gagné.
+
+        Si oui, afficher le gagnant et arrêter la partie.
+
+    Vérifier si toutes les cases sont remplies.
+
+        Si oui, afficher "Match nul" et arrêter la partie.
+
+    Changer de joueur et recommencer.
+
+3.Fin du jeu
+
+Afficher le message de victoire ou de match nul.
+
+Proposer de rejouer ou quitter.
+
