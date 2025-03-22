@@ -45,25 +45,48 @@ winning_combinations = [
 ]
 
 
-print_grid(grid)
-player = "X"
+# Initialisation des scores
+score_X = 0
+score_O = 0
 
-while True:
-    written_case = input("Dans quelle case voulez-vous jouer ? ")
-    if not verify_cell(written_case):  
-        print("Erreur : nom de case invalide.")
-        continue  # Redemander une entrée
+while True:  
+    grid = {cell: " " for cell in ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"]}
+    player = "X"
 
-    if grid[written_case] in ["X", "O"]:  
-        print("Erreur : case déjà occupée.")
-        continue  # Redemander une entrée
-
-    grid[written_case] = player  
-    
-    
-    winner = verify_win(grid)
-    if winner is not None:
+    while True:
         print_grid(grid)
-        print(f"{winner} a gagné !")
+        written_case = input(f"Joueur {player}, dans quelle case voulez-vous jouer ? ")
+
+        if not verify_cell(written_case) or grid[written_case] != " ":
+            print("Erreur : case invalide ou déjà occupée.")
+            continue  
+
+        grid[written_case] = player
+
+        winner = verify_win(grid)
+        if winner is not None:
+            print_grid(grid)
+            print(f"{winner} a gagné !")
+            
+            if winner == "X":
+                score_X += 1
+            else:
+                score_O += 1
+
+            break
+
+        if " " not in grid.values():
+            print_grid(grid)
+            print("Match nul")
+            break 
+
+        player = "O" if player == "X" else "X"  # Changer de joueur
+
+    # Affichage des scores
+    print(f"\nScore : X = {score_X} | O = {score_O}\n")
+
+    # Demander si on veut rejouer
+    replay = input("Voulez-vous rejouer ? (o/n) ").lower()
+    if replay != "o":
+        print("Merci d'avoir joué !")
         break
-    player = "O" if player == "X" else "X"  
