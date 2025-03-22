@@ -33,12 +33,23 @@ print_grid(grid)
 player = "X"
 
 while True:
-    written_case = input("Dans quelle case voulez-vous jouer ?")
-    if verify_cell(written_case) == False:
+    written_case = input("Dans quelle case voulez-vous jouer ? ")
+
+    # Vérification de la validité de la case
+    if not verify_cell(written_case):  
         print("Erreur : nom de case invalide.")
-    if grid["case"] == "X" or grid["case"] == "O":
+        continue  # Redemander une entrée
+
+    # Vérification si la case est déjà occupée
+    if grid[written_case] in ["X", "O"]:  
         print("Erreur : case déjà occupée.")
-    else:
-        grid["case"] = "X" if player == "X" else grid["case"] = "O"
-    player = "O" if player == "X" else "X" # changement de joueur
-    print_grid(grid)
+        continue  # Redemander une entrée
+
+    # Placer le symbole du joueur
+    grid[written_case] = player  
+
+    # Afficher la grille mise à jour
+    print_grid(grid)  
+
+    # Changer de joueur
+    player = "O" if player == "X" else "X"  
