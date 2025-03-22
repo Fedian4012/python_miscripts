@@ -5,21 +5,21 @@ def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
 def print_grid(grid):
-    clear_screen()
     print("   A   B   C")
     print("  -------------")
     for i in range(1, 4):
         print(f"{i} | {grid[f'A{i}']} | {grid[f'B{i}']} | {grid[f'C{i}']} |")
         print("  -------------")
 
-def verify_cell(cell):
+def verify_cell(cell) -> bool:
     return re.match(r"^[ABC][123]$", cell) is not None
 
 def verify_win(grid):
     for cell1, cell2, cell3 in winning_combinations:
-        if grid[cell1] == grid[cell2] == grid[cell3] and grid[cell1] != "":
-            return grid[cell1]
-        return None
+        if grid[cell1] == grid[cell2] == grid[cell3] and grid[cell1] in ["X", "O"]:
+            return grid[cell1]  # Retourne "X" ou "O" s'il y a un gagnant
+    return None  # Si aucune combinaison n'a été trouvée
+
 
 grid = {
     "A1": " ",
@@ -54,11 +54,17 @@ while True:
     player = "X"
 
     while True:
+        clear_screen()
         print_grid(grid)
         written_case = input(f"Joueur {player}, dans quelle case voulez-vous jouer ? ")
 
-        if not verify_cell(written_case) or grid[written_case] != " ":
-            print("Erreur : case invalide ou déjà occupée.")
+        if not verify_cell(written_case):
+            print("Erreur : case invalide")
+            input("Appuyez sur Entrée pour continuer")
+            continue
+        if grid[written_case] != " ":
+            print("Erreur : case déjà occupée.")
+            input("Appuyez sur Entrée pour continuer")
             continue  
 
         grid[written_case] = player
