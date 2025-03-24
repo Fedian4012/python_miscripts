@@ -88,10 +88,8 @@ while True:
 
         player = "O" if player == "X" else "X"  # Changer de joueur
 
-    # Affichage des scores
     print(f"\nScore : X = {score_X} | O = {score_O}\n")
 
-    # Demander si on veut rejouer
     replay = input("Voulez-vous rejouer ? (o/n) ").lower()
     if replay != "o":
         print("Merci d'avoir joué !")
