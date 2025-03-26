@@ -1,10 +1,15 @@
 import os
 import re
 
+#----------------
+# Fonctions
+#----------------
 def clear_screen():
+    '''Efface l'écran'''
     os.system("cls" if os.name == "nt" else "clear")
 
 def print_grid(grid):
+    '''Affiche la grille'''
     print("   A   B   C")
     print("  -------------")
     for i in range(1, 4):
@@ -12,13 +17,19 @@ def print_grid(grid):
         print("  -------------")
 
 def verify_cell(cell) -> bool:
+    '''Vérifie qu'on veut bien jouer dans une cellule valide'''
     return re.match(r"^[ABC][123]$", cell) is not None
 
 def verify_win(grid):
+    '''Regarde si on a une position gagnante'''
     for cell1, cell2, cell3 in winning_combinations:
         if grid[cell1] == grid[cell2] == grid[cell3] and grid[cell1] in ["X", "O"]:
             return grid[cell1]  # Retourne "X" ou "O" s'il y a un gagnant
     return None  # Si aucune combinaison n'a été trouvée
+
+#----------------
+# Code
+#----------------
 
 winning_combinations = [
     ("A1", "B1", "C1"),  # Ligne 1
