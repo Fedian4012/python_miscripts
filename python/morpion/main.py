@@ -20,19 +20,6 @@ def verify_win(grid):
             return grid[cell1]  # Retourne "X" ou "O" s'il y a un gagnant
     return None  # Si aucune combinaison n'a été trouvée
 
-
-grid = {
-    "A1": " ",
-    "A2": " ",
-    "A3": " ",
-    "B1": " ",
-    "B2": " ",
-    "B3": " ",
-    "C1": " ",
-    "C2": " ",
-    "C3": " "
-}
-
 winning_combinations = [
     ("A1", "B1", "C1"),  # Ligne 1
     ("A2", "B2", "C2"),  # Ligne 2
