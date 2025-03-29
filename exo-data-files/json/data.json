@@ -1,0 +1,40 @@
+{
+    "user": {
+      "id": 12345,
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "preferences": {
+        "theme": "dark",
+        "notifications": true,
+        "language": "fr"
+      },
+      "address": {
+        "street": "123 Main St",
+        "city": "Paris",
+        "postal_code": "75001",
+        "country": "France"
+      },
+      "orders": [
+        {
+          "order_id": "A001",
+          "date": "2025-02-01",
+          "total": 99.99,
+          "items": [
+            {
+              "product_id": "P001",
+              "name": "Product 1",
+              "price": 49.99,
+              "quantity": 1
+            },
+            {
+              "product_id": "P002",
+              "name": "Product 2",
+              "price": 50.00,
+              "quantity": 1
+            }
+          ]
+        }
+      ]
+    }
+  }
+  
