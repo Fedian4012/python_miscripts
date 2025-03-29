@@ -1,0 +1,27 @@
+profile:
+  username: alice_wonder
+  age: 25
+  email: alice@example.com
+  settings:
+    privacy: high
+    notifications:
+      email: false
+      sms: true
+      push: true
+    language: en
+  friends:
+    - id: 101
+      name: Bob
+      mutual_friends: 5
+    - id: 102
+      name: Charlie
+      mutual_friends: 2
+  posts:
+    - post_id: "P1001"
+      date: "2025-03-08"
+      content: "Hello world!"
+      likes: 23
+    - post_id: "P1002"
+      date: "2025-03-07"
+      content: "Learning YAML today."
+      likes: 15

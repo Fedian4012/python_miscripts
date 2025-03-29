@@ -1,0 +1,32 @@
+profile:
+  age: 25
+  email: alice@example.com
+  friends:
+  - id: 101
+    mutual_friends: 5
+    name: Bob
+  - id: 102
+    mutual_friends: 2
+    name: Charlie
+  posts:
+  - content: Hello world!
+    date: '2025-03-08'
+    likes: 23
+    post_id: P1001
+  - content: Learning YAML today.
+    date: '2025-03-07'
+    likes: 15
+    post_id: P1002
+  - content: Everybody in this country should learn to program a computer, because
+      it teaches you how to think.
+    date: '2025-03-08'
+    likes: '33'
+    post_id: P1003
+  settings:
+    language: en
+    notifications:
+      email: false
+      push: true
+      sms: true
+    privacy: high
+  username: alice_wonder
