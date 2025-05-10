@@ -31,7 +31,7 @@ def verify_win(grid):
 # Code
 #----------------
 
-winning_combinations = [
+winning_combinations = (
     ("A1", "B1", "C1"),  # Ligne 1
     ("A2", "B2", "C2"),  # Ligne 2
     ("A3", "B3", "C3"),  # Ligne 3
@@ -40,7 +40,7 @@ winning_combinations = [
     ("C1", "C2", "C3"),  # Colonne C
     ("A1", "B2", "C3"),  # Diagonale \
     ("A3", "B2", "C1")   # Diagonale /
-]
+)
 
 
 # Initialisation des scores
