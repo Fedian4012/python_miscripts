@@ -13,23 +13,23 @@ while True:
         try:
             user_proposition = int(input("Quelle est votre proposition ? "))
             if user_proposition < mini or user_proposition > maxi:
-                raise ValueError(f"Votre proposition n'est pas dans les valeurs acceptées. Veuillez entrer un nombre entre {mini} et {maxi}.")
+                raise ValueError(Fore.RED + f"Votre proposition n'est pas dans les valeurs acceptées. Veuillez entrer un nombre entre {mini} et {maxi}.")
             attempts += 1
             if user_proposition < number:
-                print("Trop petit !")
+                print(Fore.RED + "Trop petit !")
 
             elif user_proposition > number:
-                print("Trop grand !")
+                print(Fore.RED + "Trop grand !")
 
             else:
-                print(f"Vous avez trouvé en {attempts} tentatives !")
+                print(Fore.GREEN + f"Vous avez trouvé en {attempts} tentatives !")
                 break
 
         except ValueError:
             print("Veuillez entrer un nombre valide.")
 
-    restart = input("Voulez-vous rejouer (O/n) ? ")
+    restart = input(Fore.CYAN + "Voulez-vous rejouer (O/n) ? ")
     if restart == "n":
-        print("Merci d'avoir joué ! À bientôt !")
+        print(Fore.CYAN + "Merci d'avoir joué ! À bientôt !")
         break
     
